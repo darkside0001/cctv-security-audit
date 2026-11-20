@@ -1,0 +1,60 @@
+CCTV / NVR security audit
+Authorized by: Razim Kudaybergenov (home lab)
+Generated:     2026-11-20 07:50:59Z
+Hosts in scope: 4  |  responding: 4  |  cameras/NVRs: 4
+Findings: CRITICAL 3  HIGH 2  MEDIUM 8  LOW 0
+
+192.168.1.64  [Hikvision fw 5.4.0]
+    open ports: 23, 554, 80, 8000
+    [CRITICAL] CVE-2017-7921  Improper authentication: backdoor allowing config/credential disclosure
+        Elevated access to device config without valid credentials on old firmware. (firmware 5.4.0 is below the fixed version 5.4.5).
+        fix: Update to the vendor's fixed firmware and, until then, remove the device's exposure to untrusted networks.
+        ref: https://nvd.nist.gov/vuln/detail/CVE-2017-7921
+    [CRITICAL] CVE-2021-36260  Unauthenticated command injection in the web server
+        Widely exploited. Update firmware and restrict the web interface immediately. (firmware 5.4.0 is below the fixed version 5.5.800).
+        fix: Update to the vendor's fixed firmware and, until then, remove the device's exposure to untrusted networks.
+        ref: https://nvd.nist.gov/vuln/detail/CVE-2021-36260
+    [CRITICAL] CRED-DEFAULT  Factory-default credentials still accepted
+        The device accepted the documented default login 'admin:12345'. Anyone who can reach it can log in.
+        fix: Set a unique strong password now, disable unused accounts, and enable lockout on repeated failures.
+    [HIGH] SVC-EXPOSED  telnet reachable on port 23
+        Cleartext remote shell. Should never be open on a camera.
+        fix: Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.
+    [MEDIUM] SVC-ADVISORY  Port 23 advisory
+        Telnet on cameras has historically shipped with hard-coded credentials (e.g. the Mirai default-password list). Disable it.
+        fix: Disable the service/cloud feature and block the port at the firewall.
+    [MEDIUM] SVC-EXPOSED  http reachable on port 80
+        Web admin over cleartext. Credentials cross the network in the clear.
+        fix: Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.
+    [MEDIUM] SVC-EXPOSED  hikvision-sdk reachable on port 8000
+        Hikvision SDK/ISAPI service port. Should not face untrusted networks.
+        fix: Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.
+
+192.168.1.120  [camera/NVR]
+    open ports: 554, 34567
+    [HIGH] SVC-EXPOSED  dvrip-xmeye reachable on port 34567
+        Generic DVRIP/XMEye port, tied to many botnet-recruited DVRs.
+        fix: Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.
+    [MEDIUM] SVC-ADVISORY  Port 34567 advisory
+        DVRIP/XMEye (port 34567) DVRs are a frequent Mirai/botnet target. If you do not use the XMEye cloud, disable it and block the port.
+        fix: Disable the service/cloud feature and block the port at the firewall.
+
+192.168.1.108  [Dahua]
+    open ports: 554, 80, 37777
+    [MEDIUM] SVC-EXPOSED  http reachable on port 80
+        Web admin over cleartext. Credentials cross the network in the clear.
+        fix: Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.
+    [MEDIUM] SVC-EXPOSED  dahua-dvrip reachable on port 37777
+        Dahua DVRIP control port. Should not face untrusted networks.
+        fix: Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.
+    [MEDIUM] CVE-2021-33044  Possibly affected: Authentication bypass via crafted login (ONVIF/NetKeyboard)
+        Check the Dahua PSIRT advisory for the fixed build for your exact model. (applies to this vendor; confirm your exact model/build against the advisory).
+        fix: Update to the vendor's fixed firmware and, until then, remove the device's exposure to untrusted networks.
+        ref: https://nvd.nist.gov/vuln/detail/CVE-2021-33044
+    [MEDIUM] CVE-2021-33045  Possibly affected: Authentication bypass via crafted login packet
+        Companion advisory to CVE-2021-33044. Apply the vendor's fixed build. (applies to this vendor; confirm your exact model/build against the advisory).
+        fix: Update to the vendor's fixed firmware and, until then, remove the device's exposure to untrusted networks.
+        ref: https://nvd.nist.gov/vuln/detail/CVE-2021-33045
+
+192.168.1.70  [camera/NVR]
+    open ports: 554, 443

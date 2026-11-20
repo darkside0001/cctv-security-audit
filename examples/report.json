@@ -1,0 +1,197 @@
+{
+  "tool": "cctv-security-audit",
+  "generated": "2026-11-20T07:50:59.679681+00:00",
+  "authorized_by": "Razim Kudaybergenov (home lab)",
+  "summary": {
+    "critical": 3,
+    "high": 2,
+    "medium": 8,
+    "low": 0,
+    "info": 3
+  },
+  "hosts": [
+    {
+      "host": "192.168.1.108",
+      "is_camera": true,
+      "open_ports": [
+        554,
+        80,
+        37777
+      ],
+      "vendor": "Dahua",
+      "model": "",
+      "firmware": "",
+      "findings": [
+        {
+          "rule": "SVC-EXPOSED",
+          "title": "http reachable on port 80",
+          "severity": "medium",
+          "detail": "Web admin over cleartext. Credentials cross the network in the clear.",
+          "remediation": "Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.",
+          "reference": ""
+        },
+        {
+          "rule": "SVC-EXPOSED",
+          "title": "dahua-dvrip reachable on port 37777",
+          "severity": "medium",
+          "detail": "Dahua DVRIP control port. Should not face untrusted networks.",
+          "remediation": "Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.",
+          "reference": ""
+        },
+        {
+          "rule": "CVE-2021-33044",
+          "title": "Possibly affected: Authentication bypass via crafted login (ONVIF/NetKeyboard)",
+          "severity": "medium",
+          "detail": "Check the Dahua PSIRT advisory for the fixed build for your exact model. (applies to this vendor; confirm your exact model/build against the advisory).",
+          "remediation": "Update to the vendor's fixed firmware and, until then, remove the device's exposure to untrusted networks.",
+          "reference": "https://nvd.nist.gov/vuln/detail/CVE-2021-33044"
+        },
+        {
+          "rule": "CVE-2021-33045",
+          "title": "Possibly affected: Authentication bypass via crafted login packet",
+          "severity": "medium",
+          "detail": "Companion advisory to CVE-2021-33044. Apply the vendor's fixed build. (applies to this vendor; confirm your exact model/build against the advisory).",
+          "remediation": "Update to the vendor's fixed firmware and, until then, remove the device's exposure to untrusted networks.",
+          "reference": "https://nvd.nist.gov/vuln/detail/CVE-2021-33045"
+        },
+        {
+          "rule": "FW-UNKNOWN",
+          "title": "Firmware version could not be determined",
+          "severity": "info",
+          "detail": "The device did not expose its firmware version to an unauthenticated request.",
+          "remediation": "Check the firmware version in the admin UI and compare it against the vendor's security advisories.",
+          "reference": ""
+        }
+      ]
+    },
+    {
+      "host": "192.168.1.120",
+      "is_camera": true,
+      "open_ports": [
+        554,
+        34567
+      ],
+      "vendor": "",
+      "model": "",
+      "firmware": "",
+      "findings": [
+        {
+          "rule": "SVC-EXPOSED",
+          "title": "dvrip-xmeye reachable on port 34567",
+          "severity": "high",
+          "detail": "Generic DVRIP/XMEye port, tied to many botnet-recruited DVRs.",
+          "remediation": "Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.",
+          "reference": ""
+        },
+        {
+          "rule": "SVC-ADVISORY",
+          "title": "Port 34567 advisory",
+          "severity": "medium",
+          "detail": "DVRIP/XMEye (port 34567) DVRs are a frequent Mirai/botnet target. If you do not use the XMEye cloud, disable it and block the port.",
+          "remediation": "Disable the service/cloud feature and block the port at the firewall.",
+          "reference": ""
+        },
+        {
+          "rule": "FW-UNKNOWN",
+          "title": "Firmware version could not be determined",
+          "severity": "info",
+          "detail": "The device did not expose its firmware version to an unauthenticated request.",
+          "remediation": "Check the firmware version in the admin UI and compare it against the vendor's security advisories.",
+          "reference": ""
+        }
+      ]
+    },
+    {
+      "host": "192.168.1.64",
+      "is_camera": true,
+      "open_ports": [
+        23,
+        554,
+        80,
+        8000
+      ],
+      "vendor": "Hikvision",
+      "model": "",
+      "firmware": "5.4.0",
+      "findings": [
+        {
+          "rule": "CVE-2017-7921",
+          "title": "Improper authentication: backdoor allowing config/credential disclosure",
+          "severity": "critical",
+          "detail": "Elevated access to device config without valid credentials on old firmware. (firmware 5.4.0 is below the fixed version 5.4.5).",
+          "remediation": "Update to the vendor's fixed firmware and, until then, remove the device's exposure to untrusted networks.",
+          "reference": "https://nvd.nist.gov/vuln/detail/CVE-2017-7921"
+        },
+        {
+          "rule": "CVE-2021-36260",
+          "title": "Unauthenticated command injection in the web server",
+          "severity": "critical",
+          "detail": "Widely exploited. Update firmware and restrict the web interface immediately. (firmware 5.4.0 is below the fixed version 5.5.800).",
+          "remediation": "Update to the vendor's fixed firmware and, until then, remove the device's exposure to untrusted networks.",
+          "reference": "https://nvd.nist.gov/vuln/detail/CVE-2021-36260"
+        },
+        {
+          "rule": "CRED-DEFAULT",
+          "title": "Factory-default credentials still accepted",
+          "severity": "critical",
+          "detail": "The device accepted the documented default login 'admin:12345'. Anyone who can reach it can log in.",
+          "remediation": "Set a unique strong password now, disable unused accounts, and enable lockout on repeated failures.",
+          "reference": ""
+        },
+        {
+          "rule": "SVC-EXPOSED",
+          "title": "telnet reachable on port 23",
+          "severity": "high",
+          "detail": "Cleartext remote shell. Should never be open on a camera.",
+          "remediation": "Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.",
+          "reference": ""
+        },
+        {
+          "rule": "SVC-ADVISORY",
+          "title": "Port 23 advisory",
+          "severity": "medium",
+          "detail": "Telnet on cameras has historically shipped with hard-coded credentials (e.g. the Mirai default-password list). Disable it.",
+          "remediation": "Disable the service/cloud feature and block the port at the firewall.",
+          "reference": ""
+        },
+        {
+          "rule": "SVC-EXPOSED",
+          "title": "http reachable on port 80",
+          "severity": "medium",
+          "detail": "Web admin over cleartext. Credentials cross the network in the clear.",
+          "remediation": "Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.",
+          "reference": ""
+        },
+        {
+          "rule": "SVC-EXPOSED",
+          "title": "hikvision-sdk reachable on port 8000",
+          "severity": "medium",
+          "detail": "Hikvision SDK/ISAPI service port. Should not face untrusted networks.",
+          "remediation": "Disable the service if unused, or restrict it to a management VLAN / VPN with a firewall rule. Cameras should never expose admin or control ports to an untrusted network.",
+          "reference": ""
+        }
+      ]
+    },
+    {
+      "host": "192.168.1.70",
+      "is_camera": true,
+      "open_ports": [
+        554,
+        443
+      ],
+      "vendor": "",
+      "model": "",
+      "firmware": "",
+      "findings": [
+        {
+          "rule": "FW-UNKNOWN",
+          "title": "Firmware version could not be determined",
+          "severity": "info",
+          "detail": "The device did not expose its firmware version to an unauthenticated request.",
+          "remediation": "Check the firmware version in the admin UI and compare it against the vendor's security advisories.",
+          "reference": ""
+        }
+      ]
+    }
+  ]
+}

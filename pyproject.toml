@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cctv-security-audit"
+version = "1.0.0"
+description = "Defensive security audit for IP cameras and NVRs you own or are authorized to assess"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Razim Kudaybergenov" }]
+requires-python = ">=3.10"
+dependencies = []
+keywords = ["security", "cctv", "ip-camera", "nvr", "hikvision", "dahua", "onvif", "hardening", "blue-team"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+cctv-audit = "cctv_audit.cli:main"
+
+[tool.setuptools]
+packages = ["cctv_audit"]
